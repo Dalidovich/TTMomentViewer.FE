@@ -1,0 +1,64 @@
+<section class="page">
+  <header class="page-header">
+    <h1 class="page-title">Folders</h1>
+  </header>
+
+  <div class="grid">
+    @for (folder of folders(); track folder.id) {
+      <a class="grid-cell" [routerLink]="['/folders', folder.id]">
+        <div class="cell-thumb">
+          @if (hasCover(folder)) {
+            <img
+              class="cell-image"
+              [src]="coverUrl(folder)"
+              [alt]="folder.name"
+              loading="lazy"
+              (error)="onCoverError(folder.id)"
+            />
+          } @else {
+            <span class="cell-placeholder">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <rect
+                  x="3.5"
+                  y="5"
+                  width="17"
+                  height="14"
+                  rx="2"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.6"
+                />
+                <path
+                  d="M5 16.5 9.5 12l3 3 2.5-2 4 3.5"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.6"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </span>
+          }
+          <span class="cell-badge">{{ folder.momentCount }}</span>
+        </div>
+        <span class="cell-title ellipsis">{{ folder.name }}</span>
+      </a>
+    }
+  </div>
+
+  <div #sentinel class="grid-sentinel"></div>
+
+  @if (loading()) {
+    <p class="list-status"><span class="spinner"></span></p>
+  }
+
+  @if (failed()) {
+    <p class="list-status">
+      Failed to load folders.
+      <button class="link-button" (click)="retry()">Retry</button>
+    </p>
+  }
+
+  @if (completed() && folders().length === 0) {
+    <p class="page-message">Library is empty</p>
+  }
+</section>

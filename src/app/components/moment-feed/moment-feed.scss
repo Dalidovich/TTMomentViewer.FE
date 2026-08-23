@@ -1,0 +1,54 @@
+.feed-host {
+  position: relative;
+  height: 100dvh;
+}
+
+.feed {
+  height: 100%;
+  overflow-y: scroll;
+  scroll-snap-type: y mandatory;
+  overscroll-behavior-y: contain;
+  overflow-anchor: none;
+  scrollbar-width: none;
+}
+
+.feed-item {
+  display: block;
+  height: 100dvh;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+
+.feed-message {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 1.5rem;
+  text-align: center;
+  color: var(--text-subtle);
+}
+
+.feed-status {
+  position: absolute;
+  top: calc(0.9rem + var(--safe-top));
+  left: 50%;
+  z-index: 6;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  transform: translateX(-50%);
+  margin: 0;
+  padding: 0.4rem 0.9rem;
+  border-radius: 999px;
+  background: var(--bg-scrim);
+  font-size: 0.8rem;
+  color: var(--text-subtle);
+}
+
+.feed-status .spinner {
+  width: 16px;
+  height: 16px;
+}

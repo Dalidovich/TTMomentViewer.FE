@@ -1,0 +1,13 @@
+.app-shell {
+  position: relative;
+  width: 100%;
+  max-width: var(--feed-max-width);
+  min-height: 100dvh;
+  margin: 0 auto;
+  background: var(--bg-body);
+  overflow: clip;
+}
+
+.tab-view {
+  will-change: transform;
+}

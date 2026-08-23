@@ -1,0 +1,157 @@
+:host {
+  display: block;
+}
+
+.card {
+  position: relative;
+  height: 100%;
+  overflow: hidden;
+  background: var(--bg-body);
+}
+
+.card-video {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: var(--bg-body);
+}
+
+.card-surface {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.sound-button {
+  position: absolute;
+  top: calc(0.75rem + var(--safe-top));
+  right: 0.75rem;
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: var(--bg-overlay);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  -webkit-tap-highlight-color: transparent;
+
+  svg {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+.sound-hint {
+  position: absolute;
+  top: calc(50% + 3.5rem);
+  left: 50%;
+  z-index: 2;
+  transform: translateX(-50%);
+  padding: 0.45rem 0.9rem;
+  border-radius: 999px;
+  background: var(--bg-scrim);
+  font-size: 0.85rem;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.playback-indicator {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 74px;
+  height: 74px;
+  border-radius: 50%;
+  background: var(--bg-overlay);
+  pointer-events: none;
+  animation: indicator-fade 0.7s ease-out forwards;
+
+  svg {
+    width: 32px;
+    height: 32px;
+  }
+}
+
+@keyframes indicator-fade {
+  from {
+    opacity: 0.95;
+    transform: translate(-50%, -50%) scale(0.85);
+  }
+
+  to {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(1.15);
+  }
+}
+
+.card-error {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 5;
+  transform: translate(-50%, -50%);
+  margin: 0;
+  padding: 0.6rem 1rem;
+  border-radius: 10px;
+  background: var(--bg-scrim);
+  color: var(--text-error);
+  font-size: 0.9rem;
+  text-align: center;
+  pointer-events: none;
+}
+
+.card-bottom {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: calc(var(--tab-bar-height) + var(--safe-bottom));
+  z-index: 3;
+  padding-bottom: 0.6rem;
+  background: linear-gradient(to top, var(--bg-scrim), transparent);
+  pointer-events: none;
+}
+
+.card-progress {
+  padding: 0.7rem 0.9rem;
+  touch-action: none;
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+.card-progress-track {
+  height: 3px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: var(--track);
+}
+
+.card-progress-fill {
+  height: 100%;
+  border-radius: inherit;
+  background: var(--text-body);
+}
+
+.card-overlay {
+  padding: 0 0.9rem;
+}
+
+.card-name {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.card-folder {
+  margin: 0.15rem 0 0;
+  font-size: 0.82rem;
+  color: var(--text-subtle);
+}
