@@ -1,0 +1,28 @@
+<div class="feed-host">
+  <div #scroller class="feed">
+    @for (moment of moments(); track moment.id; let index = $index) {
+      <app-moment-card
+        #card
+        class="feed-item"
+        [moment]="moment"
+        [active]="index === activeIndex()"
+        [preloaded]="isPreloaded(index)"
+      />
+    }
+  </div>
+
+  @if (moments().length === 0 && message() !== null) {
+    <p class="feed-message">{{ message() }}</p>
+  }
+
+  @if (loading()) {
+    <p class="feed-status"><span class="spinner"></span></p>
+  }
+
+  @if (failed()) {
+    <p class="feed-status">
+      Failed to load moments.
+      <button class="link-button" (click)="retry.emit()">Retry</button>
+    </p>
+  }
+</div>

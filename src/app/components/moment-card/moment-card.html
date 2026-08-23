@@ -1,0 +1,105 @@
+<div class="card">
+  <video
+    #video
+    class="card-video"
+    loop
+    muted
+    playsinline
+    preload="auto"
+    (timeupdate)="onTimeUpdate()"
+    (error)="onError()"
+  ></video>
+
+  <button
+    class="card-surface"
+    type="button"
+    aria-label="Toggle playback"
+    (click)="onSurfaceTap()"
+  ></button>
+
+  <button
+    class="sound-button"
+    type="button"
+    [attr.aria-label]="soundEnabled() ? 'Mute' : 'Unmute'"
+    (click)="onSoundToggle()"
+  >
+    @if (soundEnabled()) {
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path
+          d="M4 9.5h3.5L12 6v12l-4.5-3.5H4z"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.6"
+          stroke-linejoin="round"
+        />
+        <path
+          d="M15.5 9.5a3.5 3.5 0 0 1 0 5M18 7a7 7 0 0 1 0 10"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.6"
+          stroke-linecap="round"
+        />
+      </svg>
+    } @else {
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path
+          d="M4 9.5h3.5L12 6v12l-4.5-3.5H4z"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.6"
+          stroke-linejoin="round"
+        />
+        <path
+          d="m16 9.5 4.5 5M20.5 9.5l-4.5 5"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.6"
+          stroke-linecap="round"
+        />
+      </svg>
+    }
+  </button>
+
+  @if (active() && !soundEnabled()) {
+    <span class="sound-hint">Tap for sound</span>
+  }
+
+  @if (indicatorVisible()) {
+    <span class="playback-indicator">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path
+          d="M9.5 6v12M14.5 6v12"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+        />
+      </svg>
+    </span>
+  }
+
+  @if (failed()) {
+    <p class="card-error">Failed to load video</p>
+  }
+
+  <div class="card-bottom">
+    <div
+      #progressBar
+      class="card-progress"
+      data-no-tab-swipe
+      (pointerdown)="onScrubStart($event)"
+      (pointermove)="onScrubMove($event)"
+      (pointerup)="onScrubEnd($event)"
+      (pointercancel)="onScrubEnd($event)"
+    >
+      <div class="card-progress-track">
+        <div class="card-progress-fill" [style.width.%]="progress() * 100"></div>
+      </div>
+    </div>
+
+    <div class="card-overlay">
+      <p class="card-name ellipsis">{{ moment().name }}</p>
+      <p class="card-folder ellipsis">{{ moment().folderName }}</p>
+    </div>
+  </div>
+</div>

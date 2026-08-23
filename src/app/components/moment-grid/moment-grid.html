@@ -1,0 +1,79 @@
+<section class="page">
+  <header class="page-header">
+    <button class="icon-button" type="button" aria-label="Back" (click)="goBack()">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path
+          d="M14.5 5.5 8 12l6.5 6.5"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+    </button>
+    <h1 class="page-title ellipsis">{{ folder()?.name ?? 'Moments' }}</h1>
+  </header>
+
+  @if (missing()) {
+    <p class="page-error">Folder not found</p>
+  } @else {
+    <div class="grid">
+      @for (moment of moments(); track moment.id) {
+        <a class="grid-cell" [routerLink]="['/folders', folderId, 'view', moment.id]">
+          <div class="cell-thumb">
+            @if (hasThumbnail(moment)) {
+              <img
+                class="cell-image"
+                [src]="thumbnailUrl(moment)"
+                [alt]="moment.name"
+                loading="lazy"
+                (error)="onThumbnailError(moment.id)"
+              />
+            } @else {
+              <span class="cell-placeholder">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <rect
+                    x="3.5"
+                    y="5"
+                    width="17"
+                    height="14"
+                    rx="2"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.6"
+                  />
+                  <path
+                    d="M10.5 9.5 15 12l-4.5 2.5z"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.6"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </span>
+            }
+          </div>
+          <span class="cell-title ellipsis">{{ moment.name }}</span>
+        </a>
+      }
+    </div>
+  }
+
+  <div #sentinel class="grid-sentinel"></div>
+
+  @if (loading()) {
+    <p class="list-status"><span class="spinner"></span></p>
+  }
+
+  @if (failed()) {
+    <p class="list-status">
+      Failed to load moments.
+      <button class="link-button" (click)="retry()">Retry</button>
+    </p>
+  }
+
+  @if (completed() && moments().length === 0) {
+    <p class="page-message">This folder is empty</p>
+  }
+</section>

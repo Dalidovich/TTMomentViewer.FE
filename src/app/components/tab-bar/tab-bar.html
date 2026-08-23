@@ -1,0 +1,46 @@
+<nav class="tab-bar">
+  <a
+    class="tab"
+    routerLink="/feed"
+    routerLinkActive="tab-active"
+    [routerLinkActiveOptions]="{ exact: false }"
+  >
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path
+        d="M4 5.5h16M4 12h16M4 18.5h10"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.8"
+        stroke-linecap="round"
+      />
+    </svg>
+    <span>Feed</span>
+  </a>
+
+  <a class="tab" routerLink="/folders" routerLinkActive="tab-active">
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path
+        d="M3.5 6.5a1.5 1.5 0 0 1 1.5-1.5h4l2 2h7.5a1.5 1.5 0 0 1 1.5 1.5v9a1.5 1.5 0 0 1-1.5 1.5H5a1.5 1.5 0 0 1-1.5-1.5z"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.8"
+        stroke-linejoin="round"
+      />
+    </svg>
+    <span>Folders</span>
+  </a>
+
+  <a class="tab" routerLink="/settings" routerLinkActive="tab-active">
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <circle cx="12" cy="12" r="3.2" fill="none" stroke="currentColor" stroke-width="1.8" />
+      <path
+        d="M12 3.5v2M12 18.5v2M20.5 12h-2M5.5 12h-2M18 6l-1.4 1.4M7.4 16.6 6 18M18 18l-1.4-1.4M7.4 7.4 6 6"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.8"
+        stroke-linecap="round"
+      />
+    </svg>
+    <span>Settings</span>
+  </a>
+</nav>

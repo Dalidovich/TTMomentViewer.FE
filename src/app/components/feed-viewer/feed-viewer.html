@@ -1,0 +1,10 @@
+<app-moment-feed
+  [moments]="moments()"
+  [startIndex]="startIndex"
+  [loading]="loading()"
+  [failed]="failed()"
+  [message]="empty() ? 'Library is empty' : null"
+  (activeIndexChange)="onActiveIndexChange($event)"
+  (reachEnd)="onReachEnd()"
+  (retry)="onRetry()"
+/>

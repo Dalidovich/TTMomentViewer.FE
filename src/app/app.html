@@ -1,0 +1,12 @@
+<div
+  class="app-shell"
+  (touchstart)="onTouchStart($event)"
+  (touchmove)="onTouchMove($event)"
+  (touchend)="onTouchEnd($event)"
+  (touchcancel)="onTouchCancel()"
+>
+  <div #tabView class="tab-view">
+    <router-outlet />
+  </div>
+  <app-tab-bar />
+</div>
