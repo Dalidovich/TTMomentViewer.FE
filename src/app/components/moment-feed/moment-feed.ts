@@ -39,6 +39,7 @@ export class MomentFeedComponent implements OnDestroy {
   private readonly cards = viewChildren<MomentCardComponent, ElementRef<HTMLElement>>('card', {
     read: ElementRef,
   });
+  private readonly cardComponents = viewChildren(MomentCardComponent);
 
   readonly activeIndex = signal(0);
 
@@ -60,6 +61,20 @@ export class MomentFeedComponent implements OnDestroy {
 
   ngOnDestroy(): void {
     this.observer?.disconnect();
+  }
+
+  onCardEnded(index: number): void {
+    if (index !== untracked(this.activeIndex)) return;
+
+    const cards = this.cards();
+    const next = cards[index + 1];
+
+    if (next === undefined) {
+      this.cardComponents()[index]?.replay();
+      return;
+    }
+
+    next.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
   isPreloaded(index: number): boolean {

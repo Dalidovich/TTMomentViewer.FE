@@ -23,7 +23,7 @@ src/
     │   ├── folder.service.ts        # Folder list, single folder, folder moments, cover URL
     │   ├── moment.service.ts        # Single moment, stream URL, thumbnail URL
     │   ├── feed.service.ts          # Global feed state: seed, pages, history, active index
-    │   ├── playback.service.ts      # Global soundEnabled + playbackRate signals
+    │   ├── playback.service.ts      # Global soundEnabled + playbackRate + autoAdvance signals
     │   └── tab-navigation.service.ts # Tab order, neighbouring tab path for a URL
     └── components/
         ├── tab-bar/                 # Fixed bottom nav, three tabs
@@ -33,7 +33,7 @@ src/
         ├── folder-viewer/           # /folders/:folderId/view/:momentId — sequential folder feed
         ├── folder-grid/             # /folders — infinite-scroll folder grid
         ├── moment-grid/             # /folders/:folderId — infinite-scroll moment grid
-        └── settings/                # /settings — playback speed slider + the site name
+        └── settings/                # /settings — playback speed slider, auto-advance toggle + the site name
 ```
 
 One component = one folder with three files (`.html`, `.scss`, `.ts`). Empty `.scss` files are kept so the layout stays uniform.
@@ -47,7 +47,7 @@ One component = one folder with three files (`.html`, `.scss`, `.ts`). Empty `.s
 | `/folders` | `FolderGridComponent` | Grid of non-empty folders |
 | `/folders/:folderId` | `MomentGridComponent` | Grid of moments in a folder |
 | `/folders/:folderId/view/:momentId` | `FolderViewerComponent` | Sequential feed inside a folder, starting at the tapped moment |
-| `/settings` | `SettingsComponent` | Playback speed setting and the site name |
+| `/settings` | `SettingsComponent` | Playback speed, auto-advance setting and the site name |
 | `**` | — | Redirects to `/feed` |
 
 All routes are lazy (`loadComponent`). `/folders/:folderId/view/:momentId` is declared before `/folders/:folderId`. Back buttons use `Location.back()`.
@@ -99,11 +99,12 @@ Shared by both viewers through `MomentFeedComponent`:
 
 `MomentCardComponent`:
 
-- `<video>` is `loop`, `muted`, `playsinline`, `preload="auto"`; playback is driven by an effect calling `play()` on the active card rather than by the `autoplay` attribute, so preloaded neighbours stay paused.
+- `<video>` is `muted`, `playsinline`, `preload="auto"` and `loop` unless auto-advance is on; playback is driven by an effect calling `play()` on the active card rather than by the `autoplay` attribute, so preloaded neighbours stay paused.
 - **Sound** — `PlaybackService.soundEnabled` is a global signal. While it is `false`, a "Tap for sound" badge is shown on the active card and the first tap only enables sound. Every later tap toggles pause. The speaker button in the top-right corner toggles sound at any time.
 - **Pause** — a pause icon flashes in the center for 700 ms via a CSS animation.
 - **Progress bar** — thin track above the name overlay, updated on `timeupdate`. Scrubbing uses pointer events with pointer capture; playback pauses on `pointerdown` and resumes on release if it was playing.
 - **Speed** — `PlaybackService.playbackRate` is a global signal in `0.5 … 2.5` (step `0.1`, default `1`), set on the settings page and persisted in `localStorage` under `ttmomentviewer.playbackRate`. Cards write it to both `defaultPlaybackRate` and `playbackRate`, so the `load()` after a `src` swap keeps the chosen speed.
+- **Auto-advance** — `PlaybackService.autoAdvance` is a global signal (default `false`, persisted in `localStorage` under `ttmomentviewer.autoAdvance`), set on the settings page. While it is `false` the video loops. While it is `true` `loop` is removed and the `ended` event of the active card bubbles to `MomentFeedComponent`, which smooth-scrolls to the next card; on the very last loaded card it replays the current one instead.
 - **Folder link** — the folder name under the card is a `routerLink` to `/folders/{folderId}`, so a moment in the feed leads straight to its folder grid. `.card-bottom` is `pointer-events: none`, the link re-enables it for itself.
 - **Active card change** — the previous card is paused and reset to `currentTime = 0`, the new one starts.
 - A `error` event on a card with a real `src` shows an inline message; the rest of the feed keeps working.

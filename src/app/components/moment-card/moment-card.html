@@ -2,12 +2,13 @@
   <video
     #video
     class="card-video"
-    loop
     muted
     playsinline
     preload="auto"
+    [loop]="!autoAdvance()"
     (loadedmetadata)="onLoadedMetadata()"
     (timeupdate)="onTimeUpdate()"
+    (ended)="onEnded()"
     (error)="onError()"
   ></video>
 
