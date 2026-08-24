@@ -9,6 +9,7 @@ import {
   signal,
   viewChild,
 } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { MomentDto } from '../../models/moment';
 import { MomentService } from '../../services/moment.service';
 import { PlaybackService } from '../../services/playback.service';
@@ -23,6 +24,7 @@ function formatTime(seconds: number): string {
 @Component({
   selector: 'app-moment-card',
   standalone: true,
+  imports: [RouterLink],
   templateUrl: './moment-card.html',
   styleUrls: ['./moment-card.scss'],
 })
