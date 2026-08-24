@@ -74,6 +74,14 @@ export class MomentCardComponent implements OnDestroy {
     effect(() => {
       this.video().nativeElement.muted = !this.playback.soundEnabled();
     });
+
+    effect(() => {
+      const rate = this.playback.playbackRate();
+      const video = this.video().nativeElement;
+
+      video.defaultPlaybackRate = rate;
+      video.playbackRate = rate;
+    });
   }
 
   ngOnDestroy(): void {
