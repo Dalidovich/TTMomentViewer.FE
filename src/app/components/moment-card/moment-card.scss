@@ -24,9 +24,9 @@
   -webkit-tap-highlight-color: transparent;
 }
 
-.sound-button {
+.sound-button,
+.fullscreen-button {
   position: absolute;
-  top: calc(0.75rem + var(--safe-top));
   right: 0.75rem;
   z-index: 4;
   display: flex;
@@ -44,6 +44,14 @@
     width: 20px;
     height: 20px;
   }
+}
+
+.sound-button {
+  top: calc(0.75rem + var(--safe-top));
+}
+
+.fullscreen-button {
+  top: calc(3.5rem + var(--safe-top));
 }
 
 .sound-hint {

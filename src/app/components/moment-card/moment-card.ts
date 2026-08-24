@@ -12,6 +12,7 @@ import {
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { MomentDto } from '../../models/moment';
+import { FullscreenService } from '../../services/fullscreen.service';
 import { MomentService } from '../../services/moment.service';
 import { PlaybackService } from '../../services/playback.service';
 
@@ -32,6 +33,7 @@ function formatTime(seconds: number): string {
 export class MomentCardComponent implements OnDestroy {
   private static readonly indicatorDuration = 700;
 
+  private readonly fullscreen = inject(FullscreenService);
   private readonly momentService = inject(MomentService);
   private readonly playback = inject(PlaybackService);
 
@@ -51,6 +53,8 @@ export class MomentCardComponent implements OnDestroy {
   readonly currentTime = signal(0);
   readonly duration = signal(0);
   readonly indicatorVisible = signal(false);
+
+  readonly fullscreenActive = this.fullscreen.active;
 
   readonly currentLabel = computed(() => formatTime(this.currentTime()));
   readonly durationLabel = computed(() => formatTime(this.duration()));
@@ -129,6 +133,10 @@ export class MomentCardComponent implements OnDestroy {
   replay(): void {
     this.video().nativeElement.currentTime = 0;
     this.play();
+  }
+
+  onFullscreenToggle(): void {
+    void this.fullscreen.toggle(this.video().nativeElement);
   }
 
   onSoundToggle(): void {

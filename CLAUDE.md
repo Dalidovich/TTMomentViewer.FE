@@ -23,6 +23,7 @@ src/
     │   ├── folder.service.ts        # Folder list, single folder, folder moments, cover URL
     │   ├── moment.service.ts        # Single moment, stream URL, thumbnail URL
     │   ├── feed.service.ts          # Global feed state: seed, pages, history, active index
+    │   ├── fullscreen.service.ts    # Fullscreen API + landscape orientation lock
     │   ├── playback.service.ts      # Global soundEnabled + playbackRate + autoAdvance signals
     │   └── tab-navigation.service.ts # Tab order, neighbouring tab path for a URL
     └── components/
@@ -101,6 +102,7 @@ Shared by both viewers through `MomentFeedComponent`:
 
 - `<video>` is `muted`, `playsinline`, `preload="auto"` and `loop` unless auto-advance is on; playback is driven by an effect calling `play()` on the active card rather than by the `autoplay` attribute, so preloaded neighbours stay paused.
 - **Sound** — `PlaybackService.soundEnabled` is a global signal. While it is `false`, a "Tap for sound" badge is shown on the active card and the first tap only enables sound. Every later tap toggles pause. The speaker button in the top-right corner toggles sound at any time.
+- **Fullscreen** — a button under the speaker button calls `FullscreenService.toggle()`: it puts `document.documentElement` into the Fullscreen API and then locks `screen.orientation` to `landscape`, so a horizontal video fills the whole phone screen sideways. The whole shell goes fullscreen rather than the `<video>`, so the feed keeps scrolling and snapping while it is on. While it is on every other control is dropped from the DOM — the tab bar, the speaker button, the sound hint and `.card-bottom` (time, scrubber, name, folder link) — leaving only the fullscreen button itself, and `.app-shell` loses its `--feed-max-width` cap (`.app-shell-fullscreen`) so the video spans the landscape screen. Exiting (the button, the back gesture, `Esc`) unlocks the orientation; a `fullscreenchange` listener keeps the `active` signal in sync. Where element fullscreen is unavailable (iOS Safari) the card falls back to the native player through `webkitEnterFullscreen()`.
 - **Pause** — a pause icon flashes in the center for 700 ms via a CSS animation.
 - **Progress bar** — thin track above the name overlay, updated on `timeupdate`. Scrubbing uses pointer events with pointer capture; playback pauses on `pointerdown` and resumes on release if it was playing.
 - **Speed** — `PlaybackService.playbackRate` is a global signal in `0.5 … 2.5` (step `0.1`, default `1`), set on the settings page and persisted in `localStorage` under `ttmomentviewer.playbackRate`. Cards write it to both `defaultPlaybackRate` and `playbackRate`, so the `load()` after a `src` swap keeps the chosen speed.

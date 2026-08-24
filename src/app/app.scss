@@ -8,6 +8,10 @@
   overflow: clip;
 }
 
+.app-shell-fullscreen {
+  max-width: none;
+}
+
 .tab-view {
   will-change: transform;
 }
