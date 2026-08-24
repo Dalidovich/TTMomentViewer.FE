@@ -27,6 +27,23 @@
         <span>{{ maxRate.toFixed(1) }}&times;</span>
       </div>
     </div>
+
+    <div class="settings-item">
+      <label class="settings-toggle">
+        <span class="settings-toggle-text">
+          <span class="settings-item-label">Auto-advance</span>
+          <span class="settings-item-hint">Play the next moment when the current one ends</span>
+        </span>
+
+        <input
+          class="settings-switch"
+          type="checkbox"
+          role="switch"
+          [checked]="autoAdvance()"
+          (change)="onAutoAdvanceChange($event)"
+        />
+      </label>
+    </div>
   </div>
 
   <div class="settings-brand">

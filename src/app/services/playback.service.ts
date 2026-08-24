@@ -7,10 +7,14 @@ export class PlaybackService {
   static readonly playbackRateStep = 0.1;
   static readonly defaultPlaybackRate = 1;
 
+  static readonly defaultAutoAdvance = false;
+
   private static readonly playbackRateKey = 'ttmomentviewer.playbackRate';
+  private static readonly autoAdvanceKey = 'ttmomentviewer.autoAdvance';
 
   readonly soundEnabled = signal(false);
   readonly playbackRate = signal(PlaybackService.readStoredPlaybackRate());
+  readonly autoAdvance = signal(PlaybackService.readStoredAutoAdvance());
 
   constructor() {
     effect(() => {
@@ -18,6 +22,16 @@ export class PlaybackService {
 
       try {
         localStorage.setItem(PlaybackService.playbackRateKey, String(rate));
+      } catch {
+        return;
+      }
+    });
+
+    effect(() => {
+      const enabled = this.autoAdvance();
+
+      try {
+        localStorage.setItem(PlaybackService.autoAdvanceKey, String(enabled));
       } catch {
         return;
       }
@@ -36,6 +50,14 @@ export class PlaybackService {
     this.playbackRate.set(PlaybackService.normalizePlaybackRate(rate));
   }
 
+  setAutoAdvance(enabled: boolean): void {
+    this.autoAdvance.set(enabled);
+  }
+
+  toggleAutoAdvance(): void {
+    this.autoAdvance.update((enabled) => !enabled);
+  }
+
   resetPlaybackRate(): void {
     this.playbackRate.set(PlaybackService.defaultPlaybackRate);
   }
@@ -49,6 +71,16 @@ export class PlaybackService {
         : PlaybackService.normalizePlaybackRate(Number(stored));
     } catch {
       return PlaybackService.defaultPlaybackRate;
+    }
+  }
+
+  private static readStoredAutoAdvance(): boolean {
+    try {
+      const stored = localStorage.getItem(PlaybackService.autoAdvanceKey);
+
+      return stored === null ? PlaybackService.defaultAutoAdvance : stored === 'true';
+    } catch {
+      return PlaybackService.defaultAutoAdvance;
     }
   }
 

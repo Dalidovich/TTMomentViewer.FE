@@ -14,6 +14,7 @@ export class SettingsComponent {
   readonly maxRate = PlaybackService.maxPlaybackRate;
   readonly rateStep = PlaybackService.playbackRateStep;
   readonly playbackRate = this.playback.playbackRate;
+  readonly autoAdvance = this.playback.autoAdvance;
 
   onPlaybackRateInput(event: Event): void {
     this.playback.setPlaybackRate(Number((event.target as HTMLInputElement).value));
@@ -21,5 +22,9 @@ export class SettingsComponent {
 
   onPlaybackRateReset(): void {
     this.playback.resetPlaybackRate();
+  }
+
+  onAutoAdvanceChange(event: Event): void {
+    this.playback.setAutoAdvance((event.target as HTMLInputElement).checked);
   }
 }

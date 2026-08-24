@@ -6,6 +6,7 @@ import {
   effect,
   inject,
   input,
+  output,
   signal,
   viewChild,
 } from '@angular/core';
@@ -41,7 +42,10 @@ export class MomentCardComponent implements OnDestroy {
   readonly active = input(false);
   readonly preloaded = input(false);
 
+  readonly ended = output<void>();
+
   readonly soundEnabled = this.playback.soundEnabled;
+  readonly autoAdvance = this.playback.autoAdvance;
   readonly failed = signal(false);
   readonly progress = signal(0);
   readonly currentTime = signal(0);
@@ -122,6 +126,11 @@ export class MomentCardComponent implements OnDestroy {
     this.flashIndicator();
   }
 
+  replay(): void {
+    this.video().nativeElement.currentTime = 0;
+    this.play();
+  }
+
   onSoundToggle(): void {
     this.playback.toggleSound();
   }
@@ -139,6 +148,12 @@ export class MomentCardComponent implements OnDestroy {
 
     this.currentTime.set(video.currentTime);
     this.progress.set(video.duration > 0 ? video.currentTime / video.duration : 0);
+  }
+
+  onEnded(): void {
+    if (!this.active()) return;
+
+    this.ended.emit();
   }
 
   onError(): void {
