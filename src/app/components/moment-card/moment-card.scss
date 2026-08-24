@@ -120,6 +120,15 @@
   pointer-events: none;
 }
 
+.card-time {
+  margin: 0 0 0.1rem;
+  padding: 0 0.9rem;
+  text-align: right;
+  font-size: 0.75rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-subtle);
+}
+
 .card-progress {
   padding: 0.7rem 0.9rem;
   touch-action: none;
