@@ -28,7 +28,7 @@ src/
     └── components/
         ├── tab-bar/                 # Fixed bottom nav, three tabs
         ├── moment-feed/             # Shared scroll-snap feed: observer, positioning, paging
-        ├── moment-card/             # One card: video, sound, pause, scrubber, name overlay
+        ├── moment-card/             # One card: video, sound, pause, scrubber, name + folder link
         ├── feed-viewer/             # /feed — thin wrapper over the shuffled global feed
         ├── folder-viewer/           # /folders/:folderId/view/:momentId — sequential folder feed
         ├── folder-grid/             # /folders — infinite-scroll folder grid
@@ -104,6 +104,7 @@ Shared by both viewers through `MomentFeedComponent`:
 - **Pause** — a pause icon flashes in the center for 700 ms via a CSS animation.
 - **Progress bar** — thin track above the name overlay, updated on `timeupdate`. Scrubbing uses pointer events with pointer capture; playback pauses on `pointerdown` and resumes on release if it was playing.
 - **Speed** — `PlaybackService.playbackRate` is a global signal in `0.5 … 2.5` (step `0.1`, default `1`), set on the settings page and persisted in `localStorage` under `ttmomentviewer.playbackRate`. Cards write it to both `defaultPlaybackRate` and `playbackRate`, so the `load()` after a `src` swap keeps the chosen speed.
+- **Folder link** — the folder name under the card is a `routerLink` to `/folders/{folderId}`, so a moment in the feed leads straight to its folder grid. `.card-bottom` is `pointer-events: none`, the link re-enables it for itself.
 - **Active card change** — the previous card is paused and reset to `currentTime = 0`, the new one starts.
 - A `error` event on a card with a real `src` shows an inline message; the rest of the feed keeps working.
 

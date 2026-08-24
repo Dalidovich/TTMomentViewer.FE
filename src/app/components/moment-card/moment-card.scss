@@ -160,7 +160,22 @@
 }
 
 .card-folder {
-  margin: 0.15rem 0 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  max-width: 100%;
+  margin: 0.3rem 0 0;
+  padding: 0.25rem 0.6rem 0.25rem 0.45rem;
+  border-radius: 999px;
+  background: var(--bg-overlay);
   font-size: 0.82rem;
   color: var(--text-subtle);
+  pointer-events: auto;
+  -webkit-tap-highlight-color: transparent;
+
+  svg {
+    flex: none;
+    width: 15px;
+    height: 15px;
+  }
 }
