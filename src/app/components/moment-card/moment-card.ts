@@ -13,6 +13,13 @@ import { MomentDto } from '../../models/moment';
 import { MomentService } from '../../services/moment.service';
 import { PlaybackService } from '../../services/playback.service';
 
+function formatTime(seconds: number): string {
+  const total = Math.max(0, Math.floor(seconds));
+  const minutes = Math.floor(total / 60);
+
+  return `${minutes}:${String(total % 60).padStart(2, '0')}`;
+}
+
 @Component({
   selector: 'app-moment-card',
   standalone: true,
@@ -35,7 +42,12 @@ export class MomentCardComponent implements OnDestroy {
   readonly soundEnabled = this.playback.soundEnabled;
   readonly failed = signal(false);
   readonly progress = signal(0);
+  readonly currentTime = signal(0);
+  readonly duration = signal(0);
   readonly indicatorVisible = signal(false);
+
+  readonly currentLabel = computed(() => formatTime(this.currentTime()));
+  readonly durationLabel = computed(() => formatTime(this.duration()));
 
   private readonly source = computed(() =>
     this.preloaded() ? this.momentService.getStreamUrl(this.moment().id) : null,
@@ -58,6 +70,8 @@ export class MomentCardComponent implements OnDestroy {
         video.load();
         this.failed.set(false);
         this.progress.set(0);
+        this.currentTime.set(0);
+        this.duration.set(0);
       }
 
       if (active && source !== null) {
@@ -68,6 +82,7 @@ export class MomentCardComponent implements OnDestroy {
       video.pause();
       if (source !== null) video.currentTime = 0;
       this.progress.set(0);
+      this.currentTime.set(0);
       this.hideIndicator();
     });
 
@@ -109,11 +124,18 @@ export class MomentCardComponent implements OnDestroy {
     this.playback.toggleSound();
   }
 
+  onLoadedMetadata(): void {
+    const video = this.video().nativeElement;
+
+    this.duration.set(Number.isFinite(video.duration) ? video.duration : 0);
+  }
+
   onTimeUpdate(): void {
     if (this.scrubbing) return;
 
     const video = this.video().nativeElement;
 
+    this.currentTime.set(video.currentTime);
     this.progress.set(video.duration > 0 ? video.currentTime / video.duration : 0);
   }
 
@@ -154,6 +176,7 @@ export class MomentCardComponent implements OnDestroy {
     const video = this.video().nativeElement;
 
     video.currentTime = ratio * video.duration;
+    this.currentTime.set(video.currentTime);
     this.progress.set(ratio);
   }
 
