@@ -1,5 +1,6 @@
 <div
   class="app-shell"
+  [class.app-shell-fullscreen]="fullscreenActive()"
   (touchstart)="onTouchStart($event)"
   (touchmove)="onTouchMove($event)"
   (touchend)="onTouchEnd($event)"
@@ -8,5 +9,7 @@
   <div #tabView class="tab-view">
     <router-outlet />
   </div>
-  <app-tab-bar />
+  @if (!fullscreenActive()) {
+    <app-tab-bar />
+  }
 </div>

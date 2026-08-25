@@ -3,6 +3,49 @@
     <h1 class="page-title">Settings</h1>
   </header>
 
+  <div class="settings-list">
+    <div class="settings-item">
+      <div class="settings-item-head">
+        <span class="settings-item-label">Playback speed</span>
+        <span class="settings-item-value">{{ playbackRate().toFixed(1) }}&times;</span>
+      </div>
+
+      <input
+        class="settings-slider"
+        type="range"
+        data-no-tab-swipe
+        [min]="minRate"
+        [max]="maxRate"
+        [step]="rateStep"
+        [value]="playbackRate()"
+        (input)="onPlaybackRateInput($event)"
+      />
+
+      <div class="settings-item-foot">
+        <span>{{ minRate.toFixed(1) }}&times;</span>
+        <button class="link-button" type="button" (click)="onPlaybackRateReset()">Reset</button>
+        <span>{{ maxRate.toFixed(1) }}&times;</span>
+      </div>
+    </div>
+
+    <div class="settings-item">
+      <label class="settings-toggle">
+        <span class="settings-toggle-text">
+          <span class="settings-item-label">Auto-advance</span>
+          <span class="settings-item-hint">Play the next moment when the current one ends</span>
+        </span>
+
+        <input
+          class="settings-switch"
+          type="checkbox"
+          role="switch"
+          [checked]="autoAdvance()"
+          (change)="onAutoAdvanceChange($event)"
+        />
+      </label>
+    </div>
+  </div>
+
   <div class="settings-brand">
     <p class="settings-name">TTMomentViewer</p>
   </div>

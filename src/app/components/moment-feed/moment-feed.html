@@ -7,6 +7,7 @@
         [moment]="moment"
         [active]="index === activeIndex()"
         [preloaded]="isPreloaded(index)"
+        (ended)="onCardEnded(index)"
       />
     }
   </div>

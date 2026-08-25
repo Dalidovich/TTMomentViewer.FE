@@ -1,6 +1,7 @@
 import { Component, ElementRef, inject, viewChild } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
 import { TabBarComponent } from './components/tab-bar/tab-bar';
+import { FullscreenService } from './services/fullscreen.service';
 import { TabNavigationService } from './services/tab-navigation.service';
 
 @Component({
@@ -18,9 +19,12 @@ export class App {
   private static readonly slideDuration = 260;
   private static readonly slideEasing = 'cubic-bezier(0.22, 0.61, 0.36, 1)';
 
+  private readonly fullscreen = inject(FullscreenService);
   private readonly router = inject(Router);
   private readonly tabs = inject(TabNavigationService);
   private readonly tabView = viewChild.required<ElementRef<HTMLElement>>('tabView');
+
+  readonly fullscreenActive = this.fullscreen.active;
 
   private startX = 0;
   private startY = 0;

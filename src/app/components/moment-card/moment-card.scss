@@ -24,9 +24,9 @@
   -webkit-tap-highlight-color: transparent;
 }
 
-.sound-button {
+.sound-button,
+.fullscreen-button {
   position: absolute;
-  top: calc(0.75rem + var(--safe-top));
   right: 0.75rem;
   z-index: 4;
   display: flex;
@@ -44,6 +44,14 @@
     width: 20px;
     height: 20px;
   }
+}
+
+.sound-button {
+  top: calc(0.75rem + var(--safe-top));
+}
+
+.fullscreen-button {
+  top: calc(3.5rem + var(--safe-top));
 }
 
 .sound-hint {
@@ -120,6 +128,15 @@
   pointer-events: none;
 }
 
+.card-time {
+  margin: 0 0 0.1rem;
+  padding: 0 0.9rem;
+  text-align: right;
+  font-size: 0.75rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-subtle);
+}
+
 .card-progress {
   padding: 0.7rem 0.9rem;
   touch-action: none;
@@ -151,7 +168,22 @@
 }
 
 .card-folder {
-  margin: 0.15rem 0 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  max-width: 100%;
+  margin: 0.3rem 0 0;
+  padding: 0.25rem 0.6rem 0.25rem 0.45rem;
+  border-radius: 999px;
+  background: var(--bg-overlay);
   font-size: 0.82rem;
   color: var(--text-subtle);
+  pointer-events: auto;
+  -webkit-tap-highlight-color: transparent;
+
+  svg {
+    flex: none;
+    width: 15px;
+    height: 15px;
+  }
 }

@@ -2,11 +2,13 @@
   <video
     #video
     class="card-video"
-    loop
     muted
     playsinline
     preload="auto"
+    [loop]="!autoAdvance()"
+    (loadedmetadata)="onLoadedMetadata()"
     (timeupdate)="onTimeUpdate()"
+    (ended)="onEnded()"
     (error)="onError()"
   ></video>
 
@@ -18,22 +20,23 @@
   ></button>
 
   <button
-    class="sound-button"
+    class="fullscreen-button"
     type="button"
-    [attr.aria-label]="soundEnabled() ? 'Mute' : 'Unmute'"
-    (click)="onSoundToggle()"
+    [attr.aria-label]="fullscreenActive() ? 'Exit fullscreen' : 'Enter fullscreen'"
+    (click)="onFullscreenToggle()"
   >
-    @if (soundEnabled()) {
+    @if (fullscreenActive()) {
       <svg viewBox="0 0 24 24" aria-hidden="true">
         <path
-          d="M4 9.5h3.5L12 6v12l-4.5-3.5H4z"
+          d="M9.5 4.5v5h-5M14.5 19.5v-5h5"
           fill="none"
           stroke="currentColor"
           stroke-width="1.6"
+          stroke-linecap="round"
           stroke-linejoin="round"
         />
         <path
-          d="M15.5 9.5a3.5 3.5 0 0 1 0 5M18 7a7 7 0 0 1 0 10"
+          d="m4.5 4.5 5 5M19.5 19.5l-5-5"
           fill="none"
           stroke="currentColor"
           stroke-width="1.6"
@@ -43,14 +46,15 @@
     } @else {
       <svg viewBox="0 0 24 24" aria-hidden="true">
         <path
-          d="M4 9.5h3.5L12 6v12l-4.5-3.5H4z"
+          d="M14.5 4.5h5v5M9.5 19.5h-5v-5"
           fill="none"
           stroke="currentColor"
           stroke-width="1.6"
+          stroke-linecap="round"
           stroke-linejoin="round"
         />
         <path
-          d="m16 9.5 4.5 5M20.5 9.5l-4.5 5"
+          d="m19.5 4.5-5 5M4.5 19.5l5-5"
           fill="none"
           stroke="currentColor"
           stroke-width="1.6"
@@ -60,7 +64,52 @@
     }
   </button>
 
-  @if (active() && !soundEnabled()) {
+  @if (!fullscreenActive()) {
+    <button
+      class="sound-button"
+      type="button"
+      [attr.aria-label]="soundEnabled() ? 'Mute' : 'Unmute'"
+      (click)="onSoundToggle()"
+    >
+      @if (soundEnabled()) {
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path
+            d="M4 9.5h3.5L12 6v12l-4.5-3.5H4z"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.6"
+            stroke-linejoin="round"
+          />
+          <path
+            d="M15.5 9.5a3.5 3.5 0 0 1 0 5M18 7a7 7 0 0 1 0 10"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.6"
+            stroke-linecap="round"
+          />
+        </svg>
+      } @else {
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path
+            d="M4 9.5h3.5L12 6v12l-4.5-3.5H4z"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.6"
+            stroke-linejoin="round"
+          />
+          <path
+            d="m16 9.5 4.5 5M20.5 9.5l-4.5 5"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.6"
+            stroke-linecap="round"
+          />
+        </svg>
+      }
+    </button>
+  }
+
+  @if (active() && !soundEnabled() && !fullscreenActive()) {
     <span class="sound-hint">Tap for sound</span>
   }
 
@@ -82,24 +131,41 @@
     <p class="card-error">Failed to load video</p>
   }
 
-  <div class="card-bottom">
-    <div
-      #progressBar
-      class="card-progress"
-      data-no-tab-swipe
-      (pointerdown)="onScrubStart($event)"
-      (pointermove)="onScrubMove($event)"
-      (pointerup)="onScrubEnd($event)"
-      (pointercancel)="onScrubEnd($event)"
-    >
-      <div class="card-progress-track">
-        <div class="card-progress-fill" [style.width.%]="progress() * 100"></div>
+  @if (!fullscreenActive()) {
+    <div class="card-bottom">
+      @if (duration() > 0) {
+        <p class="card-time">{{ currentLabel() }} / {{ durationLabel() }}</p>
+      }
+
+      <div
+        #progressBar
+        class="card-progress"
+        data-no-tab-swipe
+        (pointerdown)="onScrubStart($event)"
+        (pointermove)="onScrubMove($event)"
+        (pointerup)="onScrubEnd($event)"
+        (pointercancel)="onScrubEnd($event)"
+      >
+        <div class="card-progress-track">
+          <div class="card-progress-fill" [style.width.%]="progress() * 100"></div>
+        </div>
+      </div>
+
+      <div class="card-overlay">
+        <p class="card-name ellipsis">{{ moment().name }}</p>
+        <a class="card-folder" [routerLink]="['/folders', moment().folderId]">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path
+              d="M3.5 7.5A1.5 1.5 0 0 1 5 6h3.6l1.8 2H19a1.5 1.5 0 0 1 1.5 1.5v7A1.5 1.5 0 0 1 19 18H5a1.5 1.5 0 0 1-1.5-1.5z"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.6"
+              stroke-linejoin="round"
+            />
+          </svg>
+          <span class="ellipsis">{{ moment().folderName }}</span>
+        </a>
       </div>
     </div>
-
-    <div class="card-overlay">
-      <p class="card-name ellipsis">{{ moment().name }}</p>
-      <p class="card-folder ellipsis">{{ moment().folderName }}</p>
-    </div>
-  </div>
+  }
 </div>
