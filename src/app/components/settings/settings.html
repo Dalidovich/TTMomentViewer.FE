@@ -44,6 +44,47 @@
         />
       </label>
     </div>
+
+    <div class="settings-item">
+      <div class="settings-item-head">
+        <span class="settings-item-label">Library</span>
+
+        @if (stats(); as libraryStats) {
+          <span class="settings-item-value">{{ libraryStats.momentCount }} videos</span>
+        }
+      </div>
+
+      @if (statsLoading()) {
+        <p class="list-status"><span class="spinner"></span></p>
+      }
+
+      @if (statsFailed()) {
+        <p class="list-status">
+          Failed to load library stats.
+          <button class="link-button" type="button" (click)="retryStats()">Retry</button>
+        </p>
+      }
+
+      @if (stats(); as libraryStats) {
+        <span class="settings-item-hint">
+          @if (libraryStats.momentCount === 0) {
+            Library is empty
+          } @else {
+            {{ libraryStats.folderCount }} folders &middot; archive size about
+            {{ formatSize(libraryStats.estimatedArchiveSizeBytes) }}
+          }
+        </span>
+
+        <button
+          class="settings-button"
+          type="button"
+          [disabled]="libraryStats.momentCount === 0"
+          (click)="onExport()"
+        >
+          Export library
+        </button>
+      }
+    </div>
   </div>
 
   <div class="settings-brand">
