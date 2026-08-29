@@ -4,6 +4,22 @@ Angular 21 single-page app for browsing a local video library as a TikTok-style 
 
 Mobile-first, dark theme only, three tabs: feed, folders, settings.
 
+## Screenshots
+
+| Feed | Folders |
+| --- | --- |
+| ![Feed](docs/screenshots/feed.png) | ![Folders](docs/screenshots/folders.png) |
+
+| Moments in a folder | Settings |
+| --- | --- |
+| ![Moments](docs/screenshots/moments.png) | ![Settings](docs/screenshots/settings.png) |
+
+| First tap enables sound |
+| --- |
+| ![Sound hint](docs/screenshots/feed-sound-hint.png) |
+
+Taken at a 390x844 viewport against a generated sample library, not a real one.
+
 ## Requirements
 
 - Node.js with npm 11+
@@ -31,7 +47,7 @@ npm run watch     # development build, rebuilt on change
 | `/folders` | Infinite-scroll grid of folders with cover thumbnails |
 | `/folders/:folderId` | Infinite-scroll grid of moments in one folder |
 | `/folders/:folderId/view/:momentId` | Sequential feed inside a folder, opening on the tapped moment |
-| `/settings` | Stub page |
+| `/settings` | Playback speed, auto-advance, library stats and export |
 
 `/` and any unknown route redirect to `/feed`.
 
@@ -43,7 +59,9 @@ The global feed asks the backend for a random seed and keeps its moments and act
 
 The folder feed is strictly sequential: it jumps straight to the page holding the tapped moment, then extends in both directions. No shuffle, no wraparound.
 
-**Playback.** Videos loop, start muted, and play only on the active card. Sound is a global setting: the first tap on a muted feed turns sound on, every later tap toggles pause, and the speaker button in the corner works at any time. A scrubber above the title lets you seek by dragging; playback resumes on release if it was playing.
+**Playback.** Videos loop, start muted, and play only on the active card. Sound is a global setting: the first tap on a muted feed turns sound on, every later tap toggles pause, and the speaker button in the corner works at any time. A scrubber above the title lets you seek by dragging; playback resumes on release if it was playing. A fullscreen button next to the speaker takes the whole shell fullscreen and locks the screen to landscape, hiding every other control until it is turned off.
+
+**Settings.** Playback speed (0.5x-2.5x) and auto-advance are global and persisted in `localStorage`, so they apply to every card in both feeds. The page also shows how many folders and videos the backend indexed and lets you download the whole library as an archive.
 
 **Gestures.** Dragging horizontally moves between the three tabs, following the finger and committing past ~28% of the screen width or on a fast flick. Vertical gestures always go to the feed, and dragging at the first or last tab is damped instead of committing.
 
@@ -53,8 +71,9 @@ The folder feed is strictly sequential: it jumps straight to the page holding th
 src/app/
 ├── app.routes.ts     # Lazy standalone routes
 ├── app.ts            # Shell: router outlet, tab bar, tab swipes
-├── models/           # FolderDto, MomentDto, PagedResult<T>
-├── services/         # folder, moment, feed, playback, tab-navigation
+├── models/           # FolderDto, MomentDto, LibraryStatsDto, PagedResult<T>
+├── services/         # folder, moment, feed, library, playback, fullscreen,
+│                     # tab-navigation
 └── components/       # tab-bar, moment-feed, moment-card, feed-viewer,
                       # folder-viewer, folder-grid, moment-grid, settings
 ```
